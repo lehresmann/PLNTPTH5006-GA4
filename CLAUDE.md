@@ -26,11 +26,13 @@ infected with two avian *Plasmodium* species.
 
 ## Shell script conventions
 
-- Start scripts with `#!/bin/bash` and `set -euo pipefail`
+- Start scripts with `#!/bin/bash` and `set -euo pipefail` which will stop and report an error if a command fails, a non-existent variable is referenced or if any command in a pipeline fails
 - Below that, add a comment block with the script's purpose and a usage line
   (e.g. `# Usage: bash scripts/fastqc.sh <FASTQ file> <output dir>`)
+- Before starting, check that the inputs  provided actually exist and provide an error as well as stop the script if one or more inputs do not exist
 - Copy arguments to descriptively named, lowercase variables (e.g. `fastq="$1"`);
   use uppercase only for constants (e.g. `CONTAINER=...`)
+- If descriptively named, lowercase variables are used such that the inputs are specified in the command line passed as arguments, any arguments that are passed are automatically assigned to variables according to their position in the command line
 - At the start, report the script name, the date, and the inputs;
   at the end, report the program version, a success message, and the date
 - Create output dirs with `mkdir -p` before writing to them
