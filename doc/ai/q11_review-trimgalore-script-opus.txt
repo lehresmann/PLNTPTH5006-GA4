@@ -1,0 +1,32 @@
+
+❯ <ide_opened_file>The user opened the file
+  /fs/ess/PAS3493/people/lehresmann/GA4/scripts/trimgalore.sh in the IDE. This
+  may or may not be related to the current task.</ide_opened_file>
+
+❯ Review this shell script. List the 5 most important problems or improvements,
+  most important first, with a one-sentence reason for each. Don’t change it
+  yet.
+
+  Read 1 file (ctrl+o to expand)
+
+● The script should run correctly as written. All five points are about
+  robustness and the conventions in CLAUDE.md:
+
+  1. No purpose comment or usage line. CLAUDE.md asks for a comment block under
+     set -euo pipefail with the script's purpose and a usage line, such as #
+     Usage: bash scripts/trimgalore.sh <R1 FASTQ> <R2 FASTQ> <output dir>.
+     Without it, nobody can tell what the three arguments are without reading
+     the code.
+  2. No check on the number of arguments. If you pass too few, set -u stops the
+     script with a cryptic $2: unbound variable error, when it should print the
+     usage line and exit.
+  3. Inputs aren't reported at the start. The conventions say to echo the inputs
+     (R1, R2, output dir) after the script name and date, which you need in
+     order to trace which sample a SLURM log belongs to.
+  4. The program version isn't reported at the end. Add something like apptainer
+     exec "$CONTAINER" trim_galore --version before the success message, so
+     each log records which version produced the output.
+  5. Variable names don't follow the convention. R1file/R2file mix case, but
+     CLAUDE.md wants descriptive lowercase names like fastq_r1/fastq_r2. Also,
+     the "Placeholder variables" comment is misleading; something like "Copy
+     arguments to named variables" says what the lines actually do.

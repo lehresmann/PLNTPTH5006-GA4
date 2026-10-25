@@ -1,0 +1,26 @@
+
+❯ <ide_opened_file>The user opened the file
+  /fs/ess/PAS3493/people/lehresmann/GA4/scripts/trimgalore.sh in the IDE. This
+  may or may not be related to the current task.</ide_opened_file>
+
+❯ Review this shell script. List the 5 most important problems or improvements,
+  most important first, with a one-sentence reason for each. Don’t change it
+  yet.
+
+  Read 1 file (ctrl+o to expand)
+
+● 1. No usage comment or input logging — CLAUDE.md requires a comment block
+     describing purpose/usage, and the script never reports its inputs
+     (R1/R2/outdir).
+  2. Variable names violate convention — R1file/R2file/outdir should be
+     lowercase descriptive names (r1_fastq, r2_fastq, output_dir), with
+     CONTAINER correctly uppercase as the only constant.
+  3. No program version reported at the end — CLAUDE.md requires reporting the
+     program version on success, but the script never queries/prints
+     trim_galore's version.
+  4. No success/failure check on the apptainer call itself — if trim_galore
+     errors in a way that doesn't trip set -e (e.g., inside a pipeline) you'd
+     still get the "Successfully finished" message, which is misleading.
+  5. Positional args aren't validated — if called with too few arguments, $2/$3
+     fail with an unhelpful "unbound variable" error instead of a clear usage
+     message.
