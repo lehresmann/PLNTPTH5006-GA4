@@ -1,17 +1,4 @@
-<!--
-GA4 README template.
-- Add your answers to each question's section below.
-- For each question where we want you to add your commands,
-  put the command(s) you ran in the terminal in the corresponding ```bash code block.
-- Where we want to see a command's output, there is a plain ``` code block
-  right below the command block: paste the output there.
-- You don't need to paste the contents of your scripts into this file:
-  we will look at the scripts in your `scripts` dir directly
-  (so make sure you commit them!).
-- Delete instructional comments like this one as you go.
--->
-
-# GA4 answers - <your-name>
+# GA4 answers - Lillian Ehresmann
 
 ------------------------------------------------------------------------
 
@@ -19,17 +6,11 @@ GA4 README template.
 
 ### 1: Create subdirs, and copy `CLAUDE.md` and a FastQC report
 
-<!-- No command/output needed. -->
-
 ### 2: Initialize a Git repository, and commit your first files
-
-<!-- No command/output needed here -- we check the repo directly. -->
 
 ------------------------------------------------------------------------
 
 ## Part B: A TrimGalore script --- without genAI
-
-<!-- Reminder: no genAI in this Part! -->
 
 ### 3: A TrimGalore container, its help info, and three options
 
@@ -39,25 +20,22 @@ Code to run `trim_galore --help` with the container:
 
 ```bash
 # Your command:
+apptainer exec oras://community.wave.seqera.io/library/trim-galore:2.3.0--a56e49e832976df4 trim_galore --help
 ```
 
-<!-- You don't need to paste the TrimGalore help output -->
+*Answer*: The option to indicate that the reads are paired-end: --paired 
 
-*Answer*: The option to indicate that the reads are paired-end:
+*Answer*: The option to set the output dir: -o or --output_dir 
 
-*Answer*: The option to set the output dir:
-
-*Answer*: The option to run FastQC on the trimmed FASTQ files:
+*Answer*: The option to run FastQC on the trimmed FASTQ files: --fastqc
 
 ### 4: Default thresholds
 
-*Answer*: A) The default base quality score threshold:
+*Answer*: A) The default base quality score threshold: 20
 
-*Answer*: B) The default read length threshold:
+*Answer*: B) The default read length threshold: 20 
 
 ### 5: Write the `trimgalore.sh` script
-
-<!-- No need to paste the script: we'll look at scripts/trimgalore.sh directly. -->
 
 ### 6: Run the script for sample `S63`, and check the output files
 
@@ -65,52 +43,54 @@ Code to run the script:
 
 ```bash
 # Your command:
+bash scripts/trimgalore.sh ../garrigos/fastq/S63_R1.fastq.gz ../garrigos/fastq/S63_R2.fastq.gz results/trimgalore
 ```
-
-<!-- You don't need to paste the TrimGalore logging output -->
 
 Code to list the output files:
 
 ```bash
 # Your command:
+ls results/trimgalore/
 ```
 
 The output of the command was:
 
 ```
+S63_R1.fastq.gz_trimming_report.json  S63_R2.fastq.gz_trimming_report.json
+S63_R1.fastq.gz_trimming_report.txt   S63_R2.fastq.gz_trimming_report.txt
+S63_R1_val_1_fastqc.html              S63_R2_val_2_fastqc.html
+S63_R1_val_1_fastqc.zip               S63_R2_val_2_fastqc.zip
+S63_R1_val_1.fq.gz                    S63_R2_val_2.fq.gz
 ```
 
-*Answer*: What each type of output file contains:
-
-<!-- If your script failed at first: describe the problem and your fix here. -->
+*Answer*: What each type of output file contains: For each input file, there was two types of text files, .json and .txt, of TrimGalore reports as well as an .html file for the FastQC. Additionally, the compressed files for the validated reads. 
 
 ### 7: Trimming results
 
-*Answer*: Which adapter sequence TrimGalore looked for, and how it decided on this:
+*Answer*: Which adapter sequence TrimGalore looked for, and how it decided on this: It used 'AGATCGGAAGAGC' for both reads. This is autodetected by TrimGalore if not specified. This specific one is for the Illumina universal adapter. TrimGalore `--help` states that this is "the auto-detect fallback".
 
-*Answer*: Percentage of reads with adapters in R1 and R2:
+*Answer*: Percentage of reads with adapters in R1 and R2: 13% and 10.1%, respectively.
 
-*Answer*: In R1 and R2, were more bases removed by quality trimming or by adapter trimming?
+*Answer*: In R1 and R2, were more bases removed by quality trimming or by adapter trimming? It looks like for both R1 and R2, more reads were removed by adapter trimming. 
 
-*Answer*: Percentage of read pairs that were removed:
+*Answer*: Percentage of read pairs that were removed: 7.4%
 
 ### 8: Poly-G trimming
 
-*Answer*: Did TrimGalore do poly-G trimming, and did you have to tell it to?
+*Answer*: Did TrimGalore do poly-G trimming, and did you have to tell it to? Yes, this is performed as a default if it is detected by TrimGalore.
 
-*Answer*: What TrimGalore concludes about the sequencing technology:
+*Answer*: What TrimGalore concludes about the sequencing technology: It assumes that the data came from Illumina NextSeq or NovaSeq platforms (two-color chemistry).
 
-*Answer*: Was more poly-G trimming done in R1 or R2? (Optional: any idea why?)
+*Answer*: Was more poly-G trimming done in R1 or R2? (Optional: any idea why?) There was more poly-G trimming in R2, with 2.4% and 8.7% in R1 and R2, respectively.
 
 ### 9: Compare the FastQC reports before and after trimming
 
-*Answer*: At least two differences between the reports,
-and whether things look better in terms of pass/warn/fail status:
+*Answer*: At least two differences between the reports, and whether things look better in terms of pass/warn/fail status: Yes, the trimming increased the number of passing parameters. Specifically, per base N content and overrepresented sequences are now passing compared to the raw results. You can also see that the total sequences is lower in the trimmed results (500,000 vs 462,984; the difference is the same as the amount of sequences trimmed) and, accordingly, the number of total bases was also lower (35.4 Mbp vs 33.7 Mbp). The per base sequence quality looks better after trimming as well. 
 
-*Answer*: Were the short reads with only `N`s removed?
-If so, was that due to the length threshold, or something else?
+*Answer*: Were the short reads with only `N`s removed? Yes, in the raw results the reads with `N`s were reported as overrepresented but that was not the case for the trimmed results. 
+If so, was that due to the length threshold, or something else? There does appear to be an option for having removed sequences due to too many N bases but that percentage is 0. The sequences with `N` were 35 bp and the default threshold is 20. Therefore, I assume that they were quality trimmed as they likely have Phred less than 20. Accordingly, the per base N content passed for the trimmed results compared to a flag on the raw results.
 
-*Answer*: Something you didn't expect or are confused about:
+*Answer*: Something you didn't expect or are confused about:  I would have assumed that it would be a higher percentage for the raw results since they had not been trimmed but the adapter content did not change (e.g. both figures show 0% adapter content).
 
 ------------------------------------------------------------------------
 
