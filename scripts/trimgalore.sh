@@ -9,6 +9,16 @@ R1file="$1"
 R2file="$2"
 outdir="$3"
 
+# Check that input FASTQ files exist
+if [[ ! -f "$R1file" ]]; then
+    echo "Error: R1 FASTQ file not found: $R1file" >&2
+    exit 1
+fi
+if [[ ! -f "$R2file" ]]; then
+    echo "Error: R2 FASTQ file not found: $R2file" >&2
+    exit 1
+fi
+
 # Initial logging
 echo "Starting script trimgalore.sh"
 date
